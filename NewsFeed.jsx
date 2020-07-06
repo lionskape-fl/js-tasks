@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, memo } from 'react'
 import api from './api' // some realtime API
 
 /*
@@ -10,11 +10,14 @@ item: {
 }
 */
 
-const Item = props => (
-  <div>
-    <p>{props.title}</p>
-    <p>{props.text}</p>
-  </div>
+const Item = memo(
+  props => (
+    <div>
+      <p>{props.title}</p>
+      <p>{props.text}</p>
+    </div>
+  ),
+  (prevProps, nextProps) => prevProps.id === nextProps.id
 )
 
 class NewsFeed extends Component {
@@ -23,15 +26,15 @@ class NewsFeed extends Component {
   }
 
   handleNewItem = item => {
-    this.setState({
-      top: [...this.state.top, item].sort((a, b) => b.likes - a.likes).slice(0, 100)
-    })
+    this.setState((previousState) => ({
+      top: [...previousState.top, item].sort((a, b) => b.likes - a.likes).slice(0, 100)
+    }))
   }
 
   handleDeleteItem = id => {
-    this.setState({
-      top: this.state.top.filter(item => item.id !== id)
-    })
+    this.setState((previousState) => ({
+      top: previousState.top.filter(item => item.id !== id)
+    }))
   }
 
   componentDidMount() {
@@ -49,7 +52,7 @@ class NewsFeed extends Component {
       <div>
         <p>Top 100 news:</p>
         {this.state.top.map(item =>
-          <Item title={item.title} text={item.text} />
+          <Item title={item.title} text={item.text} key={item.id} />
         )}
       </div>
     )
