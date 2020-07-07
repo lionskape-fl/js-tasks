@@ -24,7 +24,7 @@ http.createServer(async (req, res) => {
 
   const result = await cache.getOrSet(
     param,
-    async () => expensiveCalculation.calculateData(param)
+    async () => await expensiveCalculation.calculateData(param)
   );
   res.write(`${result}`)
   res.end()
