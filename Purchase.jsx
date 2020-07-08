@@ -1,4 +1,5 @@
 import React from 'react'
+import { useAsync } from './useAsync'
 
 const api = {
   /**
@@ -13,11 +14,17 @@ const api = {
 }
 
 export default () => {
+  const [run, state] = useAsync(api.purchase);
+
   return (
     <div>
-      <button>Purchase</button>
-      <p className="successText">Purchase completed!</p>
-      <p className="errorText">An error occurred!</p>
+      <button onClick={run} disabled={state === 'loading'}>Purchase</button>
+      {state === 'success' && (
+        <p className="successText">Purchase completed!</p>
+      )}
+      {state === 'error' && (
+        <p className="errorText">An error occurred!</p>
+      )}
     </div>
   )
 }
