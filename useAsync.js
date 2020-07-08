@@ -23,10 +23,12 @@ export const useAsync = (executor) => {
     setState('loading');
     try {
       setValue(await executor());
-      setState('success')
+      setState('success');
+      setError(null);
     } catch (e) {
       setError(e);
       setState('error');
+      setValue(null);
     }
 
   }, []);
